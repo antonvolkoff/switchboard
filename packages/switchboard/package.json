@@ -1,0 +1,12 @@
+{
+  "name": "switchboard",
+  "version": "0.1.0",
+  "scripts": {
+    "start": "ts-node index.ts"
+  },
+  "license": "AGPL-3.0-or-later",
+  "dependencies": {
+    "ts-node": "^8.5.4",
+    "typescript": "^3.7.4"
+  }
+}

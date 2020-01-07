@@ -1,0 +1,8 @@
+{
+  "name": "switchboard",
+  "private": true,
+  "workspaces": ["packages/*"],
+  "scripts": {
+    "start": "yarn workspace switchboard start"
+  }
+}
