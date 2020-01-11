@@ -15,7 +15,7 @@ const messages = [
 ];
 
 export default {
-  messages(rootValue, args) {
+  messages(parent, args) {
     return messages;
   },
 };

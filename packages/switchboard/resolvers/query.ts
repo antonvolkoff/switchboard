@@ -1,5 +1,5 @@
 export default {
-  mailbox(rootValue, { address }) {
+  mailbox(parent, { address }) {
     return { address };
   },
 };
