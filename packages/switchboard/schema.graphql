@@ -1,0 +1,72 @@
+# An ISO-8601 encoded UTC date time string
+scalar DateTime
+
+type Address {
+  address: String!
+  name: String
+  text: String!
+}
+
+type Attachment {
+  filename: String
+  contentType: String!
+  content: String!
+}
+
+type Message {
+  id: ID!
+
+  from: Address!
+  to: [Address!]
+  cc: [Address!]
+  bcc: [Address!]
+
+  subject: String
+  text: String
+  html: String
+
+  attachments: [Attachment!]!
+  labels: [String!]!
+}
+
+type Mailbox {
+  address: String!
+  messages(since: DateTime, until: DateTime, label: String): [Message!]!
+}
+
+type Query {
+  mailbox(address: String!): Mailbox!
+}
+
+# input CreateMessageInput {
+#   from Address!
+#   to [Address!]
+#   cc [Address!]
+#   bcc [Address!]
+
+#   subject String
+#   text String
+#   html String
+# }
+
+# input UpdateMessageInput {
+#   from Address!
+#   to [Address!]
+#   cc [Address!]
+#   bcc [Address!]
+
+#   subject String
+#   text String
+#   html String
+# }
+
+# type Mutation {
+#   createMessage(input: CreateMessageInput!): Message!
+#   updateMessage(id: ID!, input: UpdateMessageInput!): Message!
+
+#   receiveMessage(payload: String!): Message!
+#   sendMessage(id: ID!): Message!
+
+#   addLabel(id: ID!, label: String!): Message!
+#   removeLabel(id: ID!, label: String!): Message!
+# }
