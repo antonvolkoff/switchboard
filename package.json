@@ -4,5 +4,8 @@
   "workspaces": ["packages/*"],
   "scripts": {
     "start": "yarn workspace switchboard start"
+  },
+  "engines": {
+    "node": "12.x"
   }
 }
