@@ -3,7 +3,8 @@
   "private": true,
   "workspaces": ["packages/*"],
   "scripts": {
-    "start": "yarn workspace switchboard start"
+    "start": "yarn workspace switchboard start",
+    "test": "jest"
   },
   "engines": {
     "node": "12.x"
