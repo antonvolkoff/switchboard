@@ -6,8 +6,12 @@
   },
   "license": "AGPL-3.0-or-later",
   "dependencies": {
+    "@types/mailparser": "^2.7.0",
+    "@types/nodemailer": "^6.4.0",
     "axios": "^0.19.1",
     "graphql-yoga": "^1.18.3",
+    "mailparser": "^2.7.7",
+    "nodemailer": "^6.4.2",
     "ts-node": "^8.5.4",
     "typescript": "^3.7.4"
   },
