@@ -13,7 +13,8 @@
     "mailparser": "^2.7.7",
     "nodemailer": "^6.4.2",
     "ts-node": "^8.5.4",
-    "typescript": "^3.7.4"
+    "typescript": "^3.7.4",
+    "outpostr": "0.1.0"
   },
   "devDependencies": {
     "@types/jest": "^24.0.25",

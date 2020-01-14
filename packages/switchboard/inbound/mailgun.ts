@@ -1,6 +1,5 @@
 import * as express from "express";
-import axios from "axios";
-import { resolve } from "dns";
+import { createIncomingEmail, mockCreateIncomingEmail, Email } from "outpostr";
 
 interface InputParams {
   timestamp: number;
@@ -13,12 +12,7 @@ interface InputParams {
   "body-mime": string;
 }
 
-interface OutpostParams {
-  envelope: { from: string, to: string[] };
-  message: { data: string };
-}
-
-function toOutpostParams(input: InputParams): OutpostParams {
+function toOutpost(input: InputParams): Email {
   return {
     envelope: {
       from: input.sender,
@@ -31,17 +25,19 @@ function toOutpostParams(input: InputParams): OutpostParams {
 }
 
 export function mailgunHandler() {
-  const httpClient = axios.create({
-    baseURL: "https://www.outpostr.com",
-    timeout: 1000,
-  });
+  let forwardFunc : any;
+  if (process.env.NODE_ENV == 'test') {
+    forwardFunc = mockCreateIncomingEmail;
+  } else {
+    forwardFunc = createIncomingEmail;
+  }
 
   return async function(req: express.Request, res: express.Response) {
     const params = <InputParams>req.body;
-    const outpostParams = toOutpostParams(params);
+    const email = toOutpost(params);
 
-    const response = await httpClient.post('/api/mails', outpostParams);
-    if (response.status == 200) {
+    const success = await forwardFunc(email);
+    if (success) {
       res.status(200).send({ ok: true });
     } else {
       res.status(500).send({ ok: false });
