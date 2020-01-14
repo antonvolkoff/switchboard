@@ -1,10 +1,10 @@
 import * as express from "express";
 import * as supertest from "supertest";
 import { createTransport } from "nodemailer";
-import { Options as MailOptions } from "nodemailer/lib/mailer";
+import { Options as MailerOptions } from "nodemailer/lib/mailer";
 import { mailgunHandler } from "./mailgun";
 
-async function generateTestEmail(mailOptions: MailOptions): Promise<string> {
+async function generateTestEmail(mailOptions: MailerOptions): Promise<string> {
   const transporter = createTransport({
     streamTransport: true,
     newline: "unix",
