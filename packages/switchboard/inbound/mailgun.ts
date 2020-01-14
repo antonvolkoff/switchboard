@@ -1,5 +1,5 @@
 import * as express from "express";
-import { createIncomingEmail, mockCreateIncomingEmail, Email } from "outpostr";
+import { createIncomingEmail, mock, Email } from "outpostr";
 
 interface InputParams {
   timestamp: number;
@@ -27,7 +27,7 @@ function toOutpost(input: InputParams): Email {
 export function mailgunHandler() {
   let forwardFunc : any;
   if (process.env.NODE_ENV == 'test') {
-    forwardFunc = mockCreateIncomingEmail;
+    forwardFunc = mock.createIncomingEmail;
   } else {
     forwardFunc = createIncomingEmail;
   }
