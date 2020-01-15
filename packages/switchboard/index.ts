@@ -5,7 +5,7 @@ import * as express from "express";
 import { configuration } from "./configuration";
 import Query from "./resolvers/query";
 import Mailbox from "./resolvers/mailbox";
-import { mailgunHandler } from "./inbound/mailgun";
+import { mailgunHandler } from "./handlers/mailgun";
 
 const typeDefs = configuration.graphqlSchemaPath;
 const resolvers = { Query, Mailbox };
