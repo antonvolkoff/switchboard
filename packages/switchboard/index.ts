@@ -5,7 +5,8 @@ import * as express from "express";
 import { configuration } from "./configuration";
 import Query from "./resolvers/query";
 import Mailbox from "./resolvers/mailbox";
-import { outboundHandler, inboundHandler } from "./handlers/mailgun";
+import mailgunHandler from "./handlers/mailgun";
+import outpostrHandler from "./handlers/outpostr";
 
 const typeDefs = configuration.graphqlSchemaPath;
 const resolvers = { Query, Mailbox };
@@ -14,10 +15,9 @@ const server = new GraphQLServer({ typeDefs, resolvers });
 const formReader = express.urlencoded({ extended: true });
 const jsonReader = express.json();
 
-server.express.post("/inbound/mailgun", formReader, inboundHandler());
-server.express.post("/inbound/mailgun.mime", formReader, inboundHandler());
-
-server.express.post("/outbound/mailgun", jsonReader, outboundHandler());
+server.express.post("/inbound/mailgun", formReader, mailgunHandler());
+server.express.post("/inbound/mailgun.mime", formReader, mailgunHandler());
+server.express.post("/inbound/outpostr", jsonReader, outpostrHandler());
 
 const webServerOptions: Options = { port: configuration.port };
 server.start(webServerOptions);
