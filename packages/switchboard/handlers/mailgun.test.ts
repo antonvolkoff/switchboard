@@ -2,7 +2,7 @@ import * as express from "express";
 import * as supertest from "supertest";
 import { createTransport } from "nodemailer";
 import { Options as MailerOptions } from "nodemailer/lib/mailer";
-import { mailgunHandler } from "./mailgun";
+import mailgunHandler from "./mailgun";
 
 async function generateTestEmail(mailOptions: MailerOptions): Promise<string> {
   const transporter = createTransport({

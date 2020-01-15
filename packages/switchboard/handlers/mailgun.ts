@@ -25,7 +25,7 @@ function toOutpost(input: InputParams): Email {
   };
 }
 
-export function inboundHandler() {
+export default function mailgunHandler() {
   let forwardFunc : any;
   if (configuration.isTest()) {
     forwardFunc = mock.createIncomingEmail;
@@ -43,11 +43,5 @@ export function inboundHandler() {
     } else {
       res.status(500).send({ ok: false });
     }
-  };
-}
-
-export function outboundHandler() {
-  return async function(req: express.Request, res: express.Response) {
-    res.status(200).send({ ok: true });
   };
 }
