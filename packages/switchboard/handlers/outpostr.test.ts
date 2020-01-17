@@ -16,11 +16,9 @@ test("should handle RFC2822 message", async (done) => {
   ].join("\r\n");
 
   const payload = {
-    envelope: {
-      from: "A <one@example.com>",
-      to: ["B <two@example.com>"]
-    },
-    message: message
+    mail_from: "A <one@example.com>",
+    rcpt_to: ["B <two@example.com>"],
+    data: message
   };
   const response = await supertest(app)
     .post("/inbound/outpostr")
