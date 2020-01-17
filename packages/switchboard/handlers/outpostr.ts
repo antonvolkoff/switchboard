@@ -1,6 +1,7 @@
 import * as express from "express";
 import { createTransport } from "nodemailer";
 import { Options as MailerOptions } from "nodemailer/lib/mailer";
+import { configuration } from "../configuration";
 
 interface InputParams {
   mail_from: string;
@@ -8,20 +9,18 @@ interface InputParams {
   data: string;
 }
 
-function send(uri: string, from: string, to: string, raw: string): void {
-  if (process.env.NODE_ENV == 'test') return;
+function sendMail(uri: string, from: string, to: string, raw: string): void {
+  if (configuration.isTest()) return;
 
   const mailOptions: MailerOptions = { envelope: { from, to }, raw };
   createTransport(uri).sendMail(mailOptions);
 }
 
 export default function outpostrHandler() {
-  const smtpURI = "smtps://username:password@example.com:25";
-
   return async function(req: express.Request, res: express.Response) {
     try {
-      const params = <InputParams>req.body;
-      send(smtpURI, params.mail_from, params.rcpt_to.join(", "), params.data);
+      const { mail_from, rcpt_to, data } = <InputParams>req.body;
+      sendMail(configuration.smtpURI, mail_from, rcpt_to.join(", "), data);
 
       res.send({ ok: true });
     } catch (error) {
