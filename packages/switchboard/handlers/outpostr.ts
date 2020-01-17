@@ -24,6 +24,7 @@ export default function outpostrHandler() {
 
       res.send({ ok: true });
     } catch (error) {
+      console.log('ERROR', error);
       res.status(500).send({ ok: false });
     }
   };
