@@ -9,18 +9,18 @@ interface InputParams {
   data: string;
 }
 
-function sendMail(uri: string, from: string, to: string, raw: string): void {
+function sendMail(uri: string, from: string, to: string, raw: string): Promise<any> {
   if (configuration.isTest()) return;
 
   const mailOptions: MailerOptions = { envelope: { from, to }, raw };
-  createTransport(uri).sendMail(mailOptions);
+  return createTransport(uri).sendMail(mailOptions);
 }
 
 export default function outpostrHandler() {
   return async function(req: express.Request, res: express.Response) {
     try {
       const { mail_from, rcpt_to, data } = <InputParams>req.body;
-      sendMail(configuration.smtpURI, mail_from, rcpt_to.join(", "), data);
+      await sendMail(configuration.smtpURI, mail_from, rcpt_to.join(", "), data);
 
       res.send({ ok: true });
     } catch (error) {
