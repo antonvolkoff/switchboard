@@ -9,17 +9,25 @@ enum Environment {
   production = "production",
 }
 
+interface MailgunConfiguration {
+  webhookSigningKey: string;
+}
+
 class Configuration {
   public readonly env: Environment;
   public readonly port: number;
   public readonly graphqlSchemaPath: string;
   public readonly smtpURI: string;
+  public readonly mailgun: MailgunConfiguration;
 
   constructor() {
     this.env = <Environment>process.env.NODE_ENV;
     this.port = parseInt(process.env.PORT) || DEFAULT_PORT;
     this.graphqlSchemaPath = path.join(__dirname, "schema.graphql");
     this.smtpURI = process.env.SMTP_URI;
+
+    this.mailgun = <MailgunConfiguration>{};
+    this.mailgun.webhookSigningKey = process.env.MAILGUN_WEBHOOK_SIGNING_KEY;
   }
 
   public isTest(): boolean {
@@ -35,4 +43,5 @@ const configuration = new Configuration();
 export {
   configuration,
   Environment,
+  MailgunConfiguration,
 };

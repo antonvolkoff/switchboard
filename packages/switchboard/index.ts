@@ -4,6 +4,7 @@ import * as express from "express";
 import { configuration } from "./configuration";
 import Query from "./resolvers/query";
 import Mailbox from "./resolvers/mailbox";
+import verifyMailgunWebhook from "./handlers/verify-mailgun";
 import mailgunHandler from "./handlers/mailgun";
 import outpostrHandler from "./handlers/outpostr";
 
@@ -11,11 +12,22 @@ const typeDefs = configuration.graphqlSchemaPath;
 const resolvers = { Query, Mailbox };
 
 const server = new GraphQLServer({ typeDefs, resolvers });
-const formReader = express.urlencoded({ extended: true });
-const jsonReader = express.json();
 
-server.express.post("/inbound/mailgun.mime", formReader, mailgunHandler());
-server.express.post("/inbound/outpostr", jsonReader, outpostrHandler());
+server.express.post(
+  "/inbound/mailgun.mime",
+  [
+    express.urlencoded({ extended: true }),
+    verifyMailgunWebhook(configuration.mailgun.webhookSigningKey),
+    mailgunHandler(),
+  ]
+);
+server.express.post(
+  "/inbound/outpostr",
+  [
+    express.json(),
+    outpostrHandler()
+  ]
+);
 
 const webServerOptions: Options = { port: configuration.port };
 server.start(webServerOptions);
