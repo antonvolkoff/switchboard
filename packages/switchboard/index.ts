@@ -1,5 +1,4 @@
 import { GraphQLServer, Options } from "graphql-yoga";
-import * as path from "path";
 import * as express from "express";
 
 import { configuration } from "./configuration";
@@ -15,7 +14,6 @@ const server = new GraphQLServer({ typeDefs, resolvers });
 const formReader = express.urlencoded({ extended: true });
 const jsonReader = express.json();
 
-server.express.post("/inbound/mailgun", formReader, mailgunHandler());
 server.express.post("/inbound/mailgun.mime", formReader, mailgunHandler());
 server.express.post("/inbound/outpostr", jsonReader, outpostrHandler());
 
