@@ -18,6 +18,7 @@ class Configuration {
   public readonly port: number;
   public readonly graphqlSchemaPath: string;
   public readonly smtpURI: string;
+  public readonly bodySizeLimit: string;
   public readonly mailgun: MailgunConfiguration;
 
   constructor() {
@@ -25,6 +26,7 @@ class Configuration {
     this.port = parseInt(process.env.PORT) || DEFAULT_PORT;
     this.graphqlSchemaPath = path.join(__dirname, "schema.graphql");
     this.smtpURI = process.env.SMTP_URI;
+    this.bodySizeLimit = "16mb";
 
     this.mailgun = <MailgunConfiguration>{};
     this.mailgun.webhookSigningKey = process.env.MAILGUN_WEBHOOK_SIGNING_KEY;
