@@ -16,7 +16,7 @@ const server = new GraphQLServer({ typeDefs, resolvers });
 server.express.post(
   "/inbound/mailgun.mime",
   [
-    express.urlencoded({ extended: true }),
+    express.urlencoded({ limit: configuration.bodySizeLimit, extended: true }),
     verifyMailgunWebhook(configuration.mailgun.webhookSigningKey),
     mailgunHandler(),
   ]
@@ -24,7 +24,7 @@ server.express.post(
 server.express.post(
   "/inbound/outpostr",
   [
-    express.json(),
+    express.json({ limit: configuration.bodySizeLimit }),
     outpostrHandler()
   ]
 );
