@@ -2,6 +2,7 @@ import * as express from "express";
 import { createTransport } from "nodemailer";
 import { Options as MailerOptions } from "nodemailer/lib/mailer";
 import { configuration } from "../configuration";
+import { increment } from "../metrics";
 
 interface InputParams {
   mail_from: string;
@@ -19,8 +20,12 @@ function sendMail(uri: string, from: string, to: string, raw: string): Promise<a
 export default function outpostrHandler() {
   return async function(req: express.Request, res: express.Response) {
     try {
+      increment("mail.received.count");
+
       const { mail_from, rcpt_to, data } = <InputParams>req.body;
       await sendMail(configuration.smtpURI, mail_from, rcpt_to.join(", "), data);
+
+      increment("mail.sent.count");
 
       res.send({ ok: true });
     } catch (error) {
