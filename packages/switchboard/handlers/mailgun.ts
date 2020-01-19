@@ -1,6 +1,7 @@
 import * as express from "express";
 import { createIncomingEmail, mock, Email } from "outpostr";
 import { configuration } from "../configuration";
+import { increment } from "../metrics";
 
 interface InputParams {
   timestamp: number;
@@ -34,11 +35,14 @@ export default function mailgunHandler() {
   }
 
   return async function(req: express.Request, res: express.Response) {
+    increment("mail.received.count");
+
     const params = <InputParams>req.body;
     const email = toOutpost(params);
 
     const success = await forwardFunc(email);
     if (success) {
+      increment("mail.sent.count");
       res.status(200).send({ ok: true });
     } else {
       res.status(500).send({ ok: false });
