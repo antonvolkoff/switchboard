@@ -20,6 +20,7 @@ class Configuration {
   public readonly smtpURI: string;
   public readonly bodySizeLimit: string;
   public readonly mailgun: MailgunConfiguration;
+  public readonly sentryDsn: string;
 
   constructor() {
     this.env = <Environment>process.env.NODE_ENV;
@@ -30,6 +31,8 @@ class Configuration {
 
     this.mailgun = <MailgunConfiguration>{};
     this.mailgun.webhookSigningKey = process.env.MAILGUN_WEBHOOK_SIGNING_KEY;
+
+    this.sentryDsn = process.env.SENTRY_DSN;
   }
 
   public isTest(): boolean {
