@@ -6,6 +6,7 @@
   },
   "license": "AGPL-3.0-or-later",
   "dependencies": {
+    "@sentry/node": "5.11.0",
     "@types/mailparser": "^2.7.0",
     "@types/nodemailer": "^6.4.0",
     "axios": "^0.19.1",
