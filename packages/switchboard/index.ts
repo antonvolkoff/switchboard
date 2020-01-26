@@ -8,8 +8,15 @@ import Mailbox from "./resolvers/mailbox";
 import verifyMailgunWebhook from "./handlers/verify-mailgun";
 import mailgunHandler from "./handlers/mailgun";
 import outpostrHandler from "./handlers/outpostr";
+import MailBus from "./mail-bus";
+import * as SendToOutpostr from "./listeners/send-to-outpostr";
+import * as SendToMailgun from "./listeners/send-to-mailgun";
 
 Sentry.init({ dsn: configuration.sentryDsn });
+
+const mailBus = new MailBus();
+mailBus.on(SendToOutpostr.eventName, SendToOutpostr.listener);
+mailBus.on(SendToMailgun.eventName, SendToMailgun.listener);
 
 const typeDefs = configuration.graphqlSchemaPath;
 const resolvers = { Query, Mailbox };
@@ -23,14 +30,14 @@ app.post(
   [
     express.urlencoded({ limit: configuration.bodySizeLimit, extended: true }),
     verifyMailgunWebhook(configuration.mailgun.webhookSigningKey),
-    mailgunHandler(),
+    mailgunHandler(mailBus),
   ]
 );
 app.post(
   "/inbound/outpostr",
   [
     express.json({ limit: configuration.bodySizeLimit }),
-    outpostrHandler()
+    outpostrHandler(mailBus),
   ]
 );
 
