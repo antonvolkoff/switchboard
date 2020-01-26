@@ -3,6 +3,7 @@ import { createTransport } from "nodemailer";
 import { Options as MailerOptions } from "nodemailer/lib/mailer";
 import { configuration } from "../configuration";
 import { increment } from "../metrics";
+import MailBus from "../mail-bus";
 
 interface InputParams {
   mail_from: string;
@@ -17,20 +18,13 @@ function sendMail(uri: string, from: string, to: string, raw: string): Promise<a
   return createTransport(uri).sendMail(mailOptions);
 }
 
-export default function outpostrHandler() {
-  return async function(req: express.Request, res: express.Response) {
-    try {
-      increment("mail.received.count");
+export default function outpostrHandler(mailBus: MailBus) {
+  return function(req: express.Request, res: express.Response) {
+    increment("mail.received.count");
 
-      const { mail_from, rcpt_to, data } = <InputParams>req.body;
-      await sendMail(configuration.smtpURI, mail_from, rcpt_to.join(", "), data);
+    const { mail_from, rcpt_to, data } = <InputParams>req.body;
+    mailBus.inbound({ mail_from, rcpt_to, data });
 
-      increment("mail.sent.count");
-
-      res.send({ ok: true });
-    } catch (error) {
-      console.log('ERROR', error);
-      res.status(500).send({ ok: false });
-    }
+    res.send({ ok: true });
   };
 }

@@ -1,51 +1,24 @@
 import * as express from "express";
-import { createIncomingEmail, mock, Email } from "outpostr";
-import { configuration } from "../configuration";
 import { increment } from "../metrics";
+import MailBus from "../mail-bus";
 
 interface InputParams {
-  timestamp: number;
-  token: string;
-  signature: string;
-
   recipient: string;
   sender: string;
-
   "body-mime": string;
 }
 
-function toOutpost(input: InputParams): Email {
-  return {
-    envelope: {
-      from: input.sender,
-      to: [input.recipient],
-    },
-    message: {
-      data: input["body-mime"],
-    },
-  };
-}
-
-export default function mailgunHandler() {
-  let forwardFunc : any;
-  if (configuration.isTest()) {
-    forwardFunc = mock.createIncomingEmail;
-  } else {
-    forwardFunc = createIncomingEmail;
-  }
-
+export default function(mailBus: MailBus) {
   return async function(req: express.Request, res: express.Response) {
     increment("mail.received.count");
 
     const params = <InputParams>req.body;
-    const email = toOutpost(params);
+    mailBus.inbound({
+      mail_from: params.sender,
+      rcpt_to: [params.recipient],
+      data: params["body-mime"],
+    });
 
-    const success = await forwardFunc(email);
-    if (success) {
-      increment("mail.sent.count");
-      res.status(200).send({ ok: true });
-    } else {
-      res.status(500).send({ ok: false });
-    }
+    res.status(200).send({ ok: true });
   };
 }
