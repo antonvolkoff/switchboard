@@ -14,7 +14,7 @@
     "graphql-yoga": "^1.18.3",
     "hot-shots": "6.8.5",
     "mailparser": "^2.7.7",
-    "nodemailer": "^6.4.2",
+    "nodemailer": "^6.4.16",
     "outpostr": "0.1.0",
     "ts-node": "^8.5.4",
     "typescript": "^3.7.4"
